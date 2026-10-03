@@ -3,349 +3,307 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>AbsoluteScore V10</title>
+<title>AbsoluteScore V16</title>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <style>
 *{box-sizing:border-box}
-
-:root{
-  --bg:#07070c;
-  --card:#11111a;
-  --card2:#181822;
-  --border:#292936;
-  --purple:#8b5cf6;
-  --purple2:#a78bfa;
-  --text:#fff;
-  --muted:#8e8e9f;
-  --green:#4ade80;
-  --yellow:#facc15;
-  --red:#f87171;
-}
-
 body{
-  margin:0;
-  background:
-    radial-gradient(circle at top,#17102b 0,#07070c 42%);
-  color:var(--text);
-  font-family:Arial,Helvetica,sans-serif;
-  min-height:100vh;
+    margin:0;
+    background:#08080d;
+    color:#fff;
+    font-family:Arial,Helvetica,sans-serif;
 }
-
-.app{
-  width:min(100%,1050px);
-  margin:auto;
-  padding:18px;
+button,input,select{
+    font:inherit;
 }
-
-header{
-  text-align:center;
-  padding:25px 10px;
-}
-
-.logo{
-  font-size:34px;
-  font-weight:900;
-  letter-spacing:4px;
-}
-
-.logo span{
-  color:var(--purple2);
-}
-
-.tagline{
-  color:var(--muted);
-  margin-top:7px;
-  font-size:13px;
-}
-
-.version{
-  display:inline-block;
-  margin-top:12px;
-  padding:5px 10px;
-  border:1px solid #51369a;
-  border-radius:20px;
-  color:var(--purple2);
-  font-size:11px;
-  font-weight:bold;
-}
-
-.card{
-  background:rgba(17,17,26,.94);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:18px;
-  margin-bottom:18px;
-  box-shadow:0 12px 35px rgba(0,0,0,.2);
-}
-
-h2{
-  margin:0 0 15px;
-  font-size:19px;
-}
-
-h3{
-  margin:0 0 10px;
-}
-
-input[type=file]{
-  width:100%;
-  padding:14px;
-  background:#0c0c13;
-  color:white;
-  border:1px solid var(--border);
-  border-radius:10px;
-}
-
 button{
-  border:0;
-  border-radius:10px;
-  padding:13px 15px;
-  background:var(--purple);
-  color:white;
-  font-weight:bold;
-  cursor:pointer;
-  transition:.15s;
+    cursor:pointer;
 }
-
-button:hover{
-  filter:brightness(1.12);
+.app{
+    max-width:1200px;
+    margin:auto;
+    padding:16px;
 }
-
-button:disabled{
-  opacity:.45;
-  cursor:not-allowed;
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
 }
-
-.btnrow{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-top:10px;
+.logo{
+    font-size:25px;
+    font-weight:900;
+    letter-spacing:2px;
 }
-
-.secondary{
-  background:#252532;
+.logo span{
+    opacity:.45;
 }
-
-.danger{
-  background:#991b1b;
+.subtitle{
+    color:#777;
+    font-size:12px;
+    margin-top:4px;
 }
-
-.green{
-  background:#166534;
+.nav{
+    display:flex;
+    gap:7px;
+    overflow-x:auto;
+    padding-bottom:5px;
+    margin-bottom:18px;
 }
-
-.progress{
-  height:9px;
-  background:#272733;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:15px;
+.nav button{
+    background:#14141c;
+    color:#aaa;
+    border:1px solid #272733;
+    border-radius:10px;
+    padding:10px 14px;
+    white-space:nowrap;
 }
-
-.progressBar{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#6d28d9,#a78bfa);
-  transition:.2s;
+.nav button.active,
+.nav button:hover{
+    background:#242432;
+    color:#fff;
 }
-
-.status{
-  text-align:center;
-  color:var(--muted);
-  font-size:13px;
-  margin-top:10px;
+.page{
+    display:none;
 }
-
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  margin-top:15px;
+.page.active{
+    display:block;
 }
-
+.card{
+    background:#111118;
+    border:1px solid #282832;
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:16px;
+}
+.hero{
+    padding:24px;
+    background:
+        linear-gradient(135deg,#151522,#0d0d13);
+}
+.hero h1{
+    margin:0 0 8px;
+    font-size:32px;
+}
+.muted{
+    color:#777;
+}
+.grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
 .stat{
-  background:#0c0c13;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:12px;
-  text-align:center;
+    background:#171720;
+    border:1px solid #292934;
+    border-radius:13px;
+    padding:16px;
 }
-
-.stat b{
-  display:block;
-  font-size:20px;
+.stat small{
+    color:#777;
+    display:block;
+    font-size:10px;
+    letter-spacing:1px;
 }
-
-.stat span{
-  color:var(--muted);
-  font-size:10px;
+.stat strong{
+    display:block;
+    margin-top:7px;
+    font-size:26px;
 }
-
-.detected{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
+.row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
 }
-
-.scoreRow{
-  background:var(--card2);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:11px;
-  display:grid;
-  grid-template-columns:48px 1fr 100px 44px;
-  gap:8px;
-  align-items:center;
+input,select{
+    width:100%;
+    background:#0b0b10;
+    color:#fff;
+    border:1px solid #30303b;
+    border-radius:10px;
+    padding:11px;
+    outline:none;
 }
-
-.scoreRow input{
-  width:100%;
-  min-width:0;
-  background:#0b0b12;
-  color:white;
-  border:1px solid #3a3a4a;
-  border-radius:7px;
-  padding:9px;
+input:focus,select:focus{
+    border-color:#666;
 }
-
+.form{
+    display:grid;
+    gap:10px;
+}
+.form.two{
+    grid-template-columns:1fr 1fr;
+}
+.btn{
+    border:0;
+    border-radius:10px;
+    padding:11px 15px;
+    background:#242431;
+    color:#fff;
+    font-weight:700;
+}
+.btn:hover{
+    background:#343442;
+}
+.btn.primary{
+    background:#fff;
+    color:#08080d;
+}
+.btn.danger{
+    background:#36181d;
+    color:#ff9da8;
+}
+.btn.small{
+    padding:7px 10px;
+    font-size:12px;
+}
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+}
+.table{
+    overflow-x:auto;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:650px;
+}
+th{
+    color:#666;
+    font-size:10px;
+    text-align:left;
+    letter-spacing:1px;
+}
+th,td{
+    padding:13px 10px;
+    border-bottom:1px solid #25252e;
+}
+td{
+    font-size:14px;
+}
 .rank{
-  color:var(--purple2);
-  font-weight:bold;
-  text-align:center;
+    font-weight:900;
+    font-size:19px;
 }
-
-.delete{
-  background:#b91c1c;
-  padding:9px;
+.team{
+    font-weight:800;
 }
-
-.meta{
-  grid-column:2/5;
-  color:var(--muted);
-  font-size:10px;
+.points{
+    font-weight:900;
+    font-size:18px;
 }
-
-.high{color:var(--green)}
-.medium{color:var(--yellow)}
-.low{color:var(--red)}
-
-.leaderboard{
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-
-.leader{
-  display:grid;
-  grid-template-columns:58px 1fr auto;
-  align-items:center;
-  padding:15px;
-  background:var(--card2);
-  border:1px solid var(--border);
-  border-radius:12px;
-}
-
-.leader:first-child{
-  border-color:#7651d1;
-  background:linear-gradient(90deg,#20133b,#171722);
-}
-
-.leaderRank{
-  font-size:20px;
-  font-weight:900;
-  color:var(--purple2);
-}
-
-.teamName{
-  font-weight:bold;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.teamScore{
-  color:var(--purple2);
-  font-weight:900;
-}
-
-.empty{
-  text-align:center;
-  color:#686879;
-  padding:25px;
-}
-
-.previewGrid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:10px;
-}
-
-.preview{
-  position:relative;
-  background:#09090e;
-  border:1px solid var(--border);
-  border-radius:10px;
-  overflow:hidden;
-}
-
-.preview img{
-  width:100%;
-  height:120px;
-  object-fit:cover;
-  display:block;
-}
-
-.previewInfo{
-  padding:8px;
-  font-size:11px;
-  color:#aaa;
-}
-
 .badge{
-  display:inline-block;
-  padding:4px 7px;
-  background:#292044;
-  color:var(--purple2);
-  border-radius:5px;
-  font-size:10px;
-  margin-left:5px;
+    display:inline-block;
+    padding:5px 8px;
+    border-radius:7px;
+    background:#20202b;
+    color:#aaa;
+    font-size:11px;
 }
-
-.help{
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.5;
+.empty{
+    text-align:center;
+    color:#666;
+    padding:30px 10px;
 }
-
-textarea{
-  width:100%;
-  min-height:140px;
-  background:#09090f;
-  color:white;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:12px;
-  resize:vertical;
+.match{
+    background:#15151d;
+    border:1px solid #292934;
+    border-radius:12px;
+    padding:14px;
+    margin-top:10px;
 }
-
-@media(max-width:650px){
-  .stats{
-    grid-template-columns:repeat(2,1fr);
-  }
-
-  .scoreRow{
-    grid-template-columns:38px 1fr 75px 40px;
-  }
-
-  .btnrow{
-    grid-template-columns:1fr;
-  }
-
-  .logo{
-    font-size:27px;
-  }
+.match-title{
+    font-weight:900;
+    margin-bottom:10px;
+}
+.match-result{
+    display:flex;
+    justify-content:space-between;
+    padding:9px 0;
+    border-bottom:1px solid #24242d;
+}
+.match-result:last-child{
+    border-bottom:0;
+}
+.upload{
+    border:2px dashed #30303b;
+    border-radius:14px;
+    padding:28px;
+    text-align:center;
+}
+.upload input{
+    margin-top:15px;
+}
+.preview{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+    gap:10px;
+    margin-top:12px;
+}
+.preview img{
+    width:100%;
+    height:120px;
+    object-fit:cover;
+    border-radius:10px;
+    border:1px solid #292934;
+}
+.progress{
+    height:8px;
+    background:#1b1b23;
+    border-radius:20px;
+    overflow:hidden;
+    margin-top:12px;
+}
+.progress div{
+    height:100%;
+    width:0%;
+    background:#fff;
+    transition:.2s;
+}
+.ocr-row{
+    display:grid;
+    grid-template-columns:1fr 120px 80px;
+    gap:8px;
+    margin-top:8px;
+}
+.settings{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+}
+.notice{
+    background:#171720;
+    border-left:3px solid #777;
+    padding:12px;
+    color:#aaa;
+    margin-bottom:12px;
+    border-radius:6px;
+}
+@media(max-width:700px){
+    .grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .form.two{
+        grid-template-columns:1fr;
+    }
+    .settings{
+        grid-template-columns:repeat(2,1fr);
+    }
+    .ocr-row{
+        grid-template-columns:1fr 90px 60px;
+    }
+    .header{
+        align-items:flex-start;
+    }
+    .hero h1{
+        font-size:25px;
+    }
 }
 </style>
 </head>
@@ -354,195 +312,416 @@ textarea{
 
 <div class="app">
 
-<header>
-  <div class="logo">ABSOLUTE<span>SCORE</span></div>
-  <div class="tagline">CODM SCOREBOARD OCR & LEADERBOARD SYSTEM</div>
-  <div class="version">V10 FINAL</div>
+<header class="header">
+    <div>
+        <div class="logo">ABSOLUTE<span>SCORE</span></div>
+        <div class="subtitle">CODM TOURNAMENT SCORING SYSTEM • V16</div>
+    </div>
+
+    <button class="btn" onclick="resetTournament()">
+        Reset
+    </button>
 </header>
 
+<nav class="nav">
+    <button class="active" onclick="showPage('dashboard',this)">
+        🏠 Dashboard
+    </button>
 
-<!-- UPLOAD -->
+    <button onclick="showPage('ocr',this)">
+        📷 OCR
+    </button>
 
-<section class="card">
+    <button onclick="showPage('matches',this)">
+        🎮 Matches
+    </button>
 
-<h2>📸 Upload CODM Scoreboards</h2>
+    <button onclick="showPage('teams',this)">
+        👥 Teams
+    </button>
 
-<input
-  id="fileInput"
-  type="file"
-  accept="image/*"
-  multiple
-  onchange="showPreviews()"
->
+    <button onclick="showPage('leaderboard',this)">
+        🏆 Leaderboard
+    </button>
 
-<div class="btnrow">
+    <button onclick="showPage('settings',this)">
+        ⚙️ Settings
+    </button>
+</nav>
 
-<button
-  id="scanBtn"
-  onclick="startScan()"
->
-SCAN SCOREBOARDS
-</button>
 
-<button
-  class="secondary"
-  onclick="clearEverything()"
->
-CLEAR ALL
-</button>
+<!-- DASHBOARD -->
 
-</div>
+<section id="dashboard" class="page active">
 
-<div class="progress">
-  <div
-    id="progressBar"
-    class="progressBar"
-  ></div>
-</div>
+    <div class="card hero">
 
-<div
-  id="status"
-  class="status"
->
-Ready.
-</div>
+        <div class="muted">CURRENT TOURNAMENT</div>
 
-<div class="stats">
+        <h1 id="dashName">
+            AbsoluteScore Tournament
+        </h1>
 
-<div class="stat">
-<b id="imageCount">0</b>
-<span>IMAGES</span>
-</div>
+        <div class="muted" id="dashDate"></div>
 
-<div class="stat">
-<b id="rowCount">0</b>
-<span>ROWS</span>
-</div>
+        <div class="actions" style="margin-top:18px">
+            <button class="btn primary"
+                onclick="showPage('ocr')">
+                📷 Scan Scoreboard
+            </button>
 
-<div class="stat">
-<b id="teamCount">0</b>
-<span>TEAMS</span>
-</div>
+            <button class="btn"
+                onclick="showPage('matches')">
+                🎮 Manage Matches
+            </button>
 
-<div class="stat">
-<b id="totalPoints">0</b>
-<span>POINTS</span>
-</div>
+            <button class="btn"
+                onclick="showPage('leaderboard')">
+                🏆 View Leaderboard
+            </button>
+        </div>
 
-</div>
+    </div>
+
+    <div class="grid">
+
+        <div class="stat">
+            <small>TEAMS</small>
+            <strong id="statTeams">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>MATCHES</small>
+            <strong id="statMatches">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>RESULTS</small>
+            <strong id="statResults">0</strong>
+        </div>
+
+        <div class="stat">
+            <small>TOTAL POINTS</small>
+            <strong id="statPoints">0</strong>
+        </div>
+
+    </div>
+
+    <div class="card">
+        <div class="row">
+            <h3>Quick Leaderboard</h3>
+            <button class="btn small"
+                onclick="showPage('leaderboard')">
+                Full Leaderboard
+            </button>
+        </div>
+
+        <div id="quickBoard"></div>
+    </div>
 
 </section>
 
 
-<!-- PREVIEWS -->
+<!-- OCR -->
 
-<section class="card">
+<section id="ocr" class="page">
 
-<h2>🖼️ Screenshot Preview</h2>
+    <div class="card">
 
-<div
-  id="previews"
-  class="previewGrid"
->
-<div class="empty">
-No screenshots selected.
-</div>
-</div>
+        <h2>📷 OCR Scoreboard Scanner</h2>
+
+        <div class="notice">
+            Upload a CODM scoreboard screenshot.
+            AbsoluteScore will detect team names and scores.
+        </div>
+
+        <div class="upload">
+
+            <strong>
+                Select scoreboard screenshots
+            </strong>
+
+            <input
+                id="imageInput"
+                type="file"
+                accept="image/*"
+                multiple
+                onchange="previewImages()"
+            >
+
+            <div class="preview" id="preview"></div>
+
+            <button
+                class="btn primary"
+                style="margin-top:15px"
+                onclick="startOCR()"
+            >
+                🔎 Scan Images
+            </button>
+
+            <div class="progress">
+                <div id="ocrProgress"></div>
+            </div>
+
+            <div
+                id="ocrStatus"
+                class="muted"
+                style="margin-top:8px"
+            >
+                Ready.
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+
+        <div class="row">
+            <h3>Detected Results</h3>
+
+            <button
+                class="btn small"
+                onclick="clearOCR()"
+            >
+                Clear
+            </button>
+        </div>
+
+        <div id="ocrResults"></div>
+
+        <div class="actions" style="margin-top:15px">
+            <button
+                class="btn primary"
+                onclick="createMatchFromOCR()"
+            >
+                ➕ Add To New Match
+            </button>
+        </div>
+
+    </div>
 
 </section>
 
 
-<!-- REVIEW -->
+<!-- MATCHES -->
 
-<section class="card">
+<section id="matches" class="page">
 
-<h2>
-🔍 OCR Results
-<span class="badge">REVIEW BEFORE FINAL</span>
-</h2>
+    <div class="card">
 
-<p class="help">
-Check the detected team names and scores. You can edit or delete
-anything AbsoluteScore read incorrectly.
-</p>
+        <h2>🎮 Matches</h2>
 
-<div
-  id="detected"
-  class="detected"
->
-<div class="empty">
-No results yet.
-</div>
-</div>
+        <div class="form two">
 
-<div class="btnrow">
+            <input
+                id="matchName"
+                placeholder="Match name e.g. Match 1"
+            >
 
-<button
-  id="calculateBtn"
-  onclick="calculateFinal()"
-  disabled
->
-CALCULATE FINAL SCORES
-</button>
+            <button
+                class="btn primary"
+                onclick="createMatch()"
+            >
+                + Create Match
+            </button>
 
-<button
-  class="secondary"
-  onclick="addManualRow()"
->
-+ ADD TEAM MANUALLY
-</button>
+        </div>
 
-</div>
+    </div>
+
+    <div id="matchesList"></div>
+
+</section>
+
+
+<!-- TEAMS -->
+
+<section id="teams" class="page">
+
+    <div class="card">
+
+        <h2>👥 Team Manager</h2>
+
+        <div class="form two">
+
+            <input
+                id="teamName"
+                placeholder="Enter team name"
+            >
+
+            <button
+                class="btn primary"
+                onclick="addTeam()"
+            >
+                + Add Team
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="card">
+        <div id="teamsList"></div>
+    </div>
 
 </section>
 
 
 <!-- LEADERBOARD -->
 
-<section class="card">
+<section id="leaderboard" class="page">
 
-<h2>🏆 Final Leaderboard</h2>
+    <div class="card">
 
-<div
-  id="leaderboard"
-  class="leaderboard"
->
-<div class="empty">
-No leaderboard yet.
-</div>
-</div>
+        <div class="row">
 
-<div class="btnrow">
+            <div>
+                <h2>🏆 Leaderboard</h2>
+                <div class="muted">
+                    Automatic tournament standings
+                </div>
+            </div>
 
-<button
-  onclick="copyLeaderboard()"
->
-COPY LEADERBOARD
-</button>
+            <button
+                class="btn"
+                onclick="copyLeaderboard()"
+            >
+                📋 Copy
+            </button>
 
-<button
-  class="green"
-  onclick="downloadLeaderboard()"
->
-EXPORT TXT
-</button>
+        </div>
 
-</div>
+        <div style="margin-top:15px">
+            <input
+                id="leaderboardSearch"
+                placeholder="Search team..."
+                oninput="renderLeaderboard()"
+            >
+        </div>
+
+        <div class="table" style="margin-top:15px">
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>TEAM</th>
+                        <th>MATCHES</th>
+                        <th>KILLS</th>
+                        <th>POINTS</th>
+                    </tr>
+                </thead>
+
+                <tbody id="leaderboardBody"></tbody>
+
+            </table>
+        </div>
+
+    </div>
 
 </section>
 
 
-<!-- TEXT EXPORT -->
+<!-- SETTINGS -->
 
-<section class="card">
+<section id="settings" class="page">
 
-<h2>📋 Leaderboard Text</h2>
+    <div class="card">
 
-<textarea
-  id="outputText"
-  readonly
-  placeholder="Your final leaderboard will appear here..."
-></textarea>
+        <h2>⚙️ Tournament Settings</h2>
+
+        <div class="form">
+
+            <input
+                id="tournamentName"
+                placeholder="Tournament name"
+            >
+
+            <input
+                id="tournamentDate"
+                type="date"
+            >
+
+            <div class="settings">
+
+                <div>
+                    <label class="muted">
+                        Kill Points
+                    </label>
+                    <input
+                        id="killPoints"
+                        type="number"
+                        min="0"
+                    >
+                </div>
+
+                <div>
+                    <label class="muted">
+                        Top 1
+                    </label>
+                    <input
+                        id="top1"
+                        type="number"
+                        min="0"
+                    >
+                </div>
+
+                <div>
+                    <label class="muted">
+                        Top 2
+                    </label>
+                    <input
+                        id="top2"
+                        type="number"
+                        min="0"
+                    >
+                </div>
+
+                <div>
+                    <label class="muted">
+                        Top 3
+                    </label>
+                    <input
+                        id="top3"
+                        type="number"
+                        min="0"
+                    >
+                </div>
+
+            </div>
+
+            <div class="actions">
+
+                <button
+                    class="btn primary"
+                    onclick="saveSettings()"
+                >
+                    💾 Save Settings
+                </button>
+
+                <button
+                    class="btn"
+                    onclick="exportData()"
+                >
+                    📤 Export Backup
+                </button>
+
+                <label class="btn">
+                    📥 Import Backup
+                    <input
+                        type="file"
+                        accept=".json"
+                        hidden
+                        onchange="importData(event)"
+                    >
+                </label>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </section>
 
@@ -550,1889 +729,1492 @@ EXPORT TXT
 
 
 <script>
-
 /* =========================================================
-   GLOBAL DATA
-========================================================= */
+   ABSOLUTESCORE V16
+   ========================================================= */
 
-let entries = [];
-let finalResults = [];
-let previewURLs = [];
+const STORAGE_KEY =
+    "AbsoluteScore_V16";
 
+let state = loadState();
 
-/* =========================================================
-   ELEMENTS
-========================================================= */
-
-const fileInput =
-  document.getElementById("fileInput");
-
-const statusBox =
-  document.getElementById("status");
-
-const progressBar =
-  document.getElementById("progressBar");
+let ocrRows = [];
 
 
-/* =========================================================
-   STATUS
-========================================================= */
+/* -------------------------
+   DEFAULT STATE
+------------------------- */
 
-function setStatus(text){
-  statusBox.textContent = text;
+function defaultState(){
+
+    return {
+        tournament:{
+            name:"AbsoluteScore Tournament",
+            date:new Date()
+                .toISOString()
+                .slice(0,10)
+        },
+
+        settings:{
+            killPoints:5,
+            top1:20,
+            top2:15,
+            top3:5
+        },
+
+        teams:[],
+
+        matches:[]
+    };
 }
 
 
-/* =========================================================
-   PREVIEW IMAGES
-========================================================= */
+/* -------------------------
+   LOAD / SAVE
+------------------------- */
 
-function showPreviews(){
+function loadState(){
 
-  previewURLs.forEach(
-    url => URL.revokeObjectURL(url)
-  );
+    try{
 
-  previewURLs = [];
-
-  const files =
-    Array.from(fileInput.files);
-
-  document.getElementById("imageCount")
-    .textContent = files.length;
-
-  const container =
-    document.getElementById("previews");
-
-  container.innerHTML = "";
-
-  if(!files.length){
-
-    container.innerHTML =
-      `<div class="empty">No screenshots selected.</div>`;
-
-    return;
-  }
-
-  files.forEach((file,index)=>{
-
-    const url =
-      URL.createObjectURL(file);
-
-    previewURLs.push(url);
-
-    const box =
-      document.createElement("div");
-
-    box.className = "preview";
-
-    box.innerHTML = `
-      <img src="${url}">
-      <div class="previewInfo">
-        Screenshot ${index+1}<br>
-        ${escapeHTML(file.name)}
-      </div>
-    `;
-
-    container.appendChild(box);
-
-  });
-
-}
-
-
-/* =========================================================
-   IMAGE PROCESSING
-========================================================= */
-
-function processImage(file,mode){
-
-  return new Promise((resolve,reject)=>{
-
-    const img =
-      new Image();
-
-    const url =
-      URL.createObjectURL(file);
-
-    img.onload = ()=>{
-
-      try{
-
-        const canvas =
-          document.createElement("canvas");
-
-        const ctx =
-          canvas.getContext("2d");
-
-        const scale =
-          Math.max(
-            2,
-            Math.min(
-              4,
-              2200 / img.width
-            )
-          );
-
-        canvas.width =
-          Math.round(img.width * scale);
-
-        canvas.height =
-          Math.round(img.height * scale);
-
-        ctx.drawImage(
-          img,
-          0,
-          0,
-          canvas.width,
-          canvas.height
-        );
-
-        const imageData =
-          ctx.getImageData(
-            0,
-            0,
-            canvas.width,
-            canvas.height
-          );
-
-        const p =
-          imageData.data;
-
-        for(
-          let i=0;
-          i<p.length;
-          i+=4
-        ){
-
-          const r=p[i];
-          const g=p[i+1];
-          const b=p[i+2];
-
-          let gray =
-            .299*r +
-            .587*g +
-            .114*b;
-
-          if(mode==="strong"){
-            gray =
-              (gray-128)*2+128;
-          }
-
-          if(mode==="normal"){
-            gray =
-              (gray-128)*1.35+128;
-          }
-
-          if(mode==="threshold"){
-            gray =
-              gray>145 ? 255 : 0;
-          }
-
-          gray =
-            Math.max(
-              0,
-              Math.min(
-                255,
-                gray
-              )
+        const saved =
+            localStorage.getItem(
+                STORAGE_KEY
             );
 
-          p[i]=gray;
-          p[i+1]=gray;
-          p[i+2]=gray;
+        if(!saved)
+            return defaultState();
 
-        }
+        return JSON.parse(saved);
 
-        ctx.putImageData(
-          imageData,
-          0,
-          0
-        );
+    }catch{
 
-        URL.revokeObjectURL(url);
+        return defaultState();
+    }
+}
 
-        resolve({
-          src:canvas.toDataURL("image/png"),
-          width:canvas.width,
-          height:canvas.height
+
+function saveState(){
+
+    localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(state)
+    );
+
+    renderAll();
+}
+
+
+/* -------------------------
+   NAVIGATION
+------------------------- */
+
+function showPage(id,button){
+
+    document
+        .querySelectorAll(".page")
+        .forEach(page=>{
+            page.classList.remove("active");
         });
 
-      }catch(error){
+    const page =
+        document.getElementById(id);
 
-        URL.revokeObjectURL(url);
-        reject(error);
+    if(page)
+        page.classList.add("active");
 
-      }
+    if(button){
 
-    };
+        document
+            .querySelectorAll(".nav button")
+            .forEach(b=>{
+                b.classList.remove("active");
+            });
 
-    img.onerror=()=>{
-      URL.revokeObjectURL(url);
-      reject(
-        new Error("Image could not be loaded.")
-      );
-    };
-
-    img.src=url;
-
-  });
-
-}
-
-
-/* =========================================================
-   OCR
-========================================================= */
-
-async function runOCR(image,mode){
-
-  const result =
-    await Tesseract.recognize(
-      image.src,
-      "eng",
-      {
-        logger:data=>{
-
-          if(
-            data.status==="recognizing text"
-          ){
-
-            const percent =
-              Math.round(
-                data.progress*100
-              );
-
-            setStatus(
-              `OCR ${mode}: ${percent}%`
-            );
-
-          }
-
-        }
-      }
-    );
-
-  return result.data;
-}
-
-
-/* =========================================================
-   SCORE NORMALIZATION
-========================================================= */
-
-function normalizeScore(value){
-
-  if(value===null ||
-     value===undefined){
-    return null;
-  }
-
-  let s =
-    String(value)
-      .toUpperCase()
-      .trim();
-
-  s =
-    s
-      .replace(/O/g,"0")
-      .replace(/Q/g,"0")
-      .replace(/D/g,"0")
-      .replace(/I/g,"1")
-      .replace(/L/g,"1")
-      .replace(/Z/g,"2")
-      .replace(/S/g,"5")
-      .replace(/B/g,"8")
-      .replace(/G/g,"6");
-
-  s =
-    s.replace(/[^0-9]/g,"");
-
-  if(!s){
-    return null;
-  }
-
-  const n =
-    parseInt(s,10);
-
-  if(
-    isNaN(n) ||
-    n<0 ||
-    n>99999
-  ){
-    return null;
-  }
-
-  return n;
-}
-
-
-/* =========================================================
-   TEAM NORMALIZATION
-========================================================= */
-
-function normalizeTeam(team){
-
-  return String(team||"")
-    .toUpperCase()
-    .replace(/[|]/g,"I")
-    .replace(/[_]+/g," ")
-    .replace(/[{}[\]<>]/g," ")
-    .replace(/\s+/g," ")
-    .trim();
-
-}
-
-
-/* =========================================================
-   COMPARISON FORM
-========================================================= */
-
-function comparisonForm(team){
-
-  return normalizeTeam(team)
-    .replace(/\s+/g,"")
-    .replace(/0/g,"O")
-    .replace(/1/g,"I")
-    .replace(/2/g,"Z")
-    .replace(/5/g,"S")
-    .replace(/8/g,"B");
-
-}
-
-
-/* =========================================================
-   LEVENSHTEIN
-========================================================= */
-
-function levenshtein(a,b){
-
-  const matrix=[];
-
-  for(
-    let i=0;
-    i<=b.length;
-    i++
-  ){
-    matrix[i]=[i];
-  }
-
-  for(
-    let j=0;
-    j<=a.length;
-    j++
-  ){
-    matrix[0][j]=j;
-  }
-
-  for(
-    let i=1;
-    i<=b.length;
-    i++
-  ){
-
-    for(
-      let j=1;
-      j<=a.length;
-      j++
-    ){
-
-      matrix[i][j] =
-        b[i-1]===a[j-1]
-          ? matrix[i-1][j-1]
-          : Math.min(
-              matrix[i-1][j-1]+1,
-              matrix[i][j-1]+1,
-              matrix[i-1][j]+1
-            );
-
+        button.classList.add("active");
     }
 
-  }
-
-  return matrix[b.length][a.length];
-
+    renderAll();
 }
 
 
-/* =========================================================
-   TEAM SIMILARITY
-========================================================= */
+/* -------------------------
+   TEAMS
+------------------------- */
 
-function teamSimilarity(a,b){
+function normalizeTeam(name){
 
-  const x =
-    comparisonForm(a);
-
-  const y =
-    comparisonForm(b);
-
-  if(x===y){
-    return 1;
-  }
-
-  const max =
-    Math.max(
-      x.length,
-      y.length
-    );
-
-  if(!max){
-    return 0;
-  }
-
-  return 1 -
-    levenshtein(x,y)/max;
-
+    return String(name || "")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g,"");
 }
 
 
-/* =========================================================
-   WORD HELPERS
-========================================================= */
+function addTeam(){
 
-function cleanWord(text){
-
-  return String(text||"")
-    .replace(/[|]/g,"")
-    .trim();
-
-}
-
-
-function looksNumeric(text){
-
-  return /^[0-9OoQqDdIiLlZzSsBbGg]{1,6}$/
-    .test(
-      cleanWord(text)
-    );
-
-}
-
-
-/* =========================================================
-   SCOREBOARD ROW DETECTOR
-========================================================= */
-
-function detectRows(data,width,height){
-
-  const words =
-    Array.isArray(data.words)
-      ? data.words
-      : [];
-
-  if(!words.length){
-
-    return fallbackTextParser(
-      data.text
-    );
-
-  }
-
-
-  const usable =
-    words
-      .filter(w =>
-        w &&
-        w.text &&
-        w.bbox &&
-        Number(w.confidence)>=15
-      )
-      .map(w=>{
-
-        const x0=w.bbox.x0;
-        const y0=w.bbox.y0;
-        const x1=w.bbox.x1;
-        const y1=w.bbox.y1;
-
-        return {
-          text:cleanWord(w.text),
-          confidence:Number(w.confidence)||0,
-          x0,
-          y0,
-          x1,
-          y1,
-          cx:(x0+x1)/2,
-          cy:(y0+y1)/2
-        };
-
-      })
-      .filter(w=>w.text);
-
-
-  usable.sort(
-    (a,b)=>a.cy-b.cy
-  );
-
-
-  const rows=[];
-
-  const threshold =
-    Math.max(
-      15,
-      height*0.018
-    );
-
-
-  usable.forEach(word=>{
-
-    let row =
-      rows.find(
-        r =>
-          Math.abs(
-            r.cy-word.cy
-          ) <= threshold
-      );
-
-    if(!row){
-
-      row={
-        cy:word.cy,
-        words:[]
-      };
-
-      rows.push(row);
-
-    }
-
-    row.words.push(word);
-
-  });
-
-
-  const detected=[];
-
-
-  rows.forEach(row=>{
-
-    row.words.sort(
-      (a,b)=>a.x0-b.x0
-    );
-
-
-    if(row.words.length<2){
-      return;
-    }
-
-
-    const numeric =
-      row.words
-        .map(
-          (word,index)=>({
-            word,
-            index,
-            score:
-              normalizeScore(word.text)
-          })
-        )
-        .filter(
-          x =>
-            looksNumeric(x.word.text) &&
-            x.score!==null
+    const input =
+        document.getElementById(
+            "teamName"
         );
 
+    const name =
+        input.value.trim();
 
-    if(!numeric.length){
-      return;
+    if(!name)
+        return;
+
+    const exists =
+        state.teams.some(
+            t =>
+                normalizeTeam(t.name) ===
+                normalizeTeam(name)
+        );
+
+    if(exists){
+
+        alert("That team already exists.");
+
+        return;
     }
 
+    state.teams.push({
+        id:crypto.randomUUID(),
+        name:name
+    });
 
-    /*
-      The score is normally the
-      right-most numeric field.
-    */
+    input.value="";
 
-    let scoreCandidate =
-      numeric[numeric.length-1];
-
-
-    /*
-      Prefer a numeric field
-      toward the right side.
-    */
-
-    const rightSide =
-      numeric.filter(
-        x =>
-          x.word.cx >
-          width*0.55
-      );
+    saveState();
+}
 
 
-    if(rightSide.length){
+function deleteTeam(id){
 
-      scoreCandidate =
-        rightSide[rightSide.length-1];
-
-    }
-
-
-    const scoreIndex =
-      scoreCandidate.index;
-
-
-    let rank = null;
-    let rankIndex = -1;
-
-
-    /*
-      First numeric value near
-      the left side can be rank.
-    */
-
-    for(
-      const candidate of numeric
-    ){
-
-      if(
-        candidate.index<
-        scoreIndex &&
-        candidate.score>=1 &&
-        candidate.score<=99 &&
-        candidate.word.cx<
-        width*0.35
-      ){
-
-        rank =
-          candidate.score;
-
-        rankIndex =
-          candidate.index;
-
-        break;
-
-      }
-
-    }
-
-
-    const teamWords =
-      row.words.filter(
-        (_,index)=>
-          index!==scoreIndex &&
-          index!==rankIndex
-      );
-
-
-    let team =
-      teamWords
-        .map(w=>w.text)
-        .join(" ");
-
-
-    team =
-      normalizeTeam(team);
-
-
-    /*
-      Remove common column/header
-      words.
-    */
-
-    team =
-      team
-        .replace(
-          /\b(RANK|TEAM|SCORE|POINTS|KILLS|TOTAL|PLAYER)\b/g,
-          ""
+    if(
+        !confirm(
+            "Delete this team?"
         )
-        .replace(/\s+/g," ")
+    )
+        return;
+
+    state.teams =
+        state.teams.filter(
+            t=>t.id!==id
+        );
+
+    saveState();
+}
+
+
+function editTeam(id){
+
+    const team =
+        state.teams.find(
+            t=>t.id===id
+        );
+
+    if(!team)
+        return;
+
+    const name =
+        prompt(
+            "New team name:",
+            team.name
+        );
+
+    if(!name)
+        return;
+
+    team.name =
+        name.trim();
+
+    saveState();
+}
+
+
+/* -------------------------
+   MATCHES
+------------------------- */
+
+function createMatch(){
+
+    let name =
+        document
+        .getElementById(
+            "matchName"
+        )
+        .value
         .trim();
 
+    if(!name){
 
-    if(!validTeam(team)){
-      return;
+        name =
+            `Match ${
+                state.matches.length + 1
+            }`;
     }
 
+    state.matches.push({
 
-    let confidence =
-      0.65;
+        id:crypto.randomUUID(),
 
+        name:name,
 
-    if(
-      scoreCandidate.word.cx >
-      width*0.55
-    ){
-      confidence+=0.12;
-    }
+        results:[]
 
-
-    if(rank!==null){
-      confidence+=0.08;
-    }
-
-
-    const avgConfidence =
-      row.words.reduce(
-        (sum,w)=>
-          sum+w.confidence,
-        0
-      ) /
-      row.words.length;
-
-
-    if(avgConfidence>=70){
-      confidence+=0.08;
-    }
-
-
-    confidence =
-      Math.min(
-        .99,
-        confidence
-      );
-
-
-    detected.push({
-      rank,
-      team,
-      score:scoreCandidate.score,
-      confidence,
-      votes:1
     });
 
-  });
+    document
+        .getElementById(
+            "matchName"
+        )
+        .value="";
 
-
-  return detected;
-
+    saveState();
 }
 
 
-/* =========================================================
-   FALLBACK PARSER
-========================================================= */
+function deleteMatch(id){
 
-function fallbackTextParser(text){
+    if(
+        !confirm(
+            "Delete this match and all its results?"
+        )
+    )
+        return;
 
-  const lines =
-    String(text||"")
-      .split("\n")
-      .map(x=>x.trim())
-      .filter(Boolean);
+    state.matches =
+        state.matches.filter(
+            m=>m.id!==id
+        );
 
-  const results=[];
+    saveState();
+}
 
-  lines.forEach(line=>{
+
+function addMatchResult(matchId){
+
+    const team =
+        prompt(
+            "Team name:"
+        );
+
+    if(!team)
+        return;
+
+    const placement =
+        Number(
+            prompt(
+                "Placement (1, 2, 3, etc.):",
+                "1"
+            )
+        ) || 0;
+
+    const kills =
+        Number(
+            prompt(
+                "Kills:",
+                "0"
+            )
+        ) || 0;
+
+    const bonus =
+        Number(
+            prompt(
+                "Bonus points:",
+                "0"
+            )
+        ) || 0;
+
+    const placementPoints =
+        placement===1
+            ? Number(state.settings.top1)
+            : placement===2
+                ? Number(state.settings.top2)
+                : placement===3
+                    ? Number(state.settings.top3)
+                    : 0;
+
+    const killPoints =
+        kills *
+        Number(state.settings.killPoints);
+
+    const total =
+        placementPoints +
+        killPoints +
+        bonus;
 
     const match =
-      line.match(
-        /(.+?)\s+([0-9OoQqDdIiLlZzSsBbGg]{1,6})$/
-      );
+        state.matches.find(
+            m=>m.id===matchId
+        );
 
-    if(!match){
-      return;
-    }
+    if(!match)
+        return;
 
-    const score =
-      normalizeScore(
-        match[2]
-      );
+    match.results.push({
 
-    let team =
-      normalizeTeam(
-        match[1]
-      );
+        id:crypto.randomUUID(),
 
-    team =
-      team.replace(
-        /^\s*(?:#\s*)?\d{1,3}[\s.)|:-]*/,
-        ""
-      );
+        teamName:team.trim(),
 
-    if(
-      score===null ||
-      !validTeam(team)
-    ){
-      return;
-    }
+        placement,
 
-    results.push({
-      rank:null,
-      team,
-      score,
-      confidence:.68,
-      votes:1
+        kills,
+
+        bonus,
+
+        total
+
     });
 
-  });
-
-  return results;
-
+    saveState();
 }
 
 
-/* =========================================================
-   VALID TEAM
-========================================================= */
+function deleteResult(
+    matchId,
+    resultId
+){
 
-function validTeam(team){
-
-  if(!team || team.length<2){
-    return false;
-  }
-
-  if(!/[A-Z]/.test(team)){
-    return false;
-  }
-
-  const blocked=[
-    "RANK",
-    "TEAM",
-    "SCORE",
-    "POINTS",
-    "KILLS",
-    "TOTAL",
-    "PLAYER",
-    "PLACEMENT",
-    "ELIMINATIONS"
-  ];
-
-  if(
-    blocked.includes(team)
-  ){
-    return false;
-  }
-
-  return true;
-
-}
-
-
-/* =========================================================
-   COMBINE OCR PASSES
-========================================================= */
-
-function combinePasses(results){
-
-  const groups=[];
-
-
-  results.forEach(entry=>{
-
-    let found=null;
-
-
-    for(
-      const group of groups
-    ){
-
-      if(
-        entry.score===group.score &&
-        teamSimilarity(
-          entry.team,
-          group.team
-        )>=.82
-      ){
-
-        found=group;
-        break;
-
-      }
-
-    }
-
-
-    if(found){
-
-      found.votes++;
-
-      found.confidence =
-        Math.min(
-          .99,
-          found.confidence+.04
+    const match =
+        state.matches.find(
+            m=>m.id===matchId
         );
 
-      if(
-        entry.team.length>
-        found.team.length
-      ){
-        found.team=entry.team;
-      }
+    if(!match)
+        return;
 
-    }else{
-
-      groups.push({
-        ...entry
-      });
-
-    }
-
-  });
-
-
-  return groups;
-
-}
-
-
-/* =========================================================
-   GLOBAL MERGE
-========================================================= */
-
-function globalMerge(items){
-
-  const groups=[];
-
-
-  items.forEach(entry=>{
-
-    let found=null;
-
-
-    for(
-      const group of groups
-    ){
-
-      if(
-        entry.score===group.score &&
-        teamSimilarity(
-          entry.team,
-          group.team
-        )>=.82
-      ){
-
-        found=group;
-        break;
-
-      }
-
-    }
-
-
-    if(found){
-
-      found.votes +=
-        entry.votes||1;
-
-      found.confidence =
-        Math.min(
-          .99,
-          found.confidence+.02
+    match.results =
+        match.results.filter(
+            r=>r.id!==resultId
         );
 
-      if(
-        entry.team.length>
-        found.team.length
-      ){
-        found.team=entry.team;
-      }
-
-    }else{
-
-      groups.push({
-        ...entry
-      });
-
-    }
-
-  });
-
-
-  return groups;
-
+    saveState();
 }
 
 
-/* =========================================================
-   START SCAN
-========================================================= */
+/* -------------------------
+   LEADERBOARD
+------------------------- */
 
-async function startScan(){
+function getLeaderboard(){
 
-  const files =
-    Array.from(
-      fileInput.files
+    const map =
+        new Map();
+
+    state.matches.forEach(
+        match=>{
+
+            match.results.forEach(
+                result=>{
+
+                    const key =
+                        normalizeTeam(
+                            result.teamName
+                        );
+
+                    if(!map.has(key)){
+
+                        map.set(
+                            key,
+                            {
+                                team:
+                                    result.teamName,
+
+                                matches:0,
+
+                                kills:0,
+
+                                points:0
+                            }
+                        );
+                    }
+
+                    const item =
+                        map.get(key);
+
+                    item.matches++;
+
+                    item.kills +=
+                        Number(
+                            result.kills || 0
+                        );
+
+                    item.points +=
+                        Number(
+                            result.total || 0
+                        );
+                }
+            );
+        }
     );
 
+    return [...map.values()]
+        .sort(
+            (a,b)=>
+                b.points-a.points ||
+                b.kills-a.kills
+        )
+        .map(
+            (item,index)=>({
 
-  if(!files.length){
+                rank:index+1,
 
-    alert(
-      "Upload at least one scoreboard screenshot."
-    );
+                ...item
 
-    return;
-
-  }
-
-
-  document.getElementById("scanBtn")
-    .disabled=true;
-
-  document.getElementById("calculateBtn")
-    .disabled=true;
-
-
-  entries=[];
+            })
+        );
+}
 
 
-  const modes=[
-    "normal",
-    "strong",
-    "threshold"
-  ];
+/* -------------------------
+   OCR
+------------------------- */
 
+function previewImages(){
 
-  const total =
-    files.length*modes.length;
-
-  let completed=0;
-
-
-  try{
-
-    for(
-      let i=0;
-      i<files.length;
-      i++
-    ){
-
-      const imageResults=[];
-
-
-      for(
-        const mode of modes
-      ){
-
-        setStatus(
-          `Scanning screenshot ${i+1}/${files.length} • ${mode}`
+    const input =
+        document.getElementById(
+            "imageInput"
         );
 
+    const preview =
+        document.getElementById(
+            "preview"
+        );
+
+    preview.innerHTML="";
+
+    [...input.files]
+        .forEach(file=>{
+
+            const img =
+                document.createElement(
+                    "img"
+                );
+
+            img.src =
+                URL.createObjectURL(
+                    file
+                );
+
+            preview.appendChild(img);
+        });
+}
+
+
+async function startOCR(){
+
+    const input =
+        document.getElementById(
+            "imageInput"
+        );
+
+    if(!input.files.length){
+
+        alert(
+            "Select at least one screenshot."
+        );
+
+        return;
+    }
+
+    ocrRows=[];
+
+    const status =
+        document.getElementById(
+            "ocrStatus"
+        );
+
+    const progress =
+        document.getElementById(
+            "ocrProgress"
+        );
+
+    let completed=0;
+
+    for(
+        const file of input.files
+    ){
+
+        status.textContent =
+            `Scanning ${file.name}...`;
 
         try{
 
-          const image =
-            await processImage(
-              files[i],
-              mode
+            const result =
+                await Tesseract.recognize(
+                    file,
+                    "eng",
+                    {
+                        logger:m=>{
+
+                            if(
+                                m.status ===
+                                "recognizing text"
+                            ){
+
+                                const p =
+                                    (
+                                        m.progress *
+                                        100
+                                    ).toFixed(0);
+
+                                status.textContent =
+                                    `OCR: ${p}%`;
+                            }
+                        }
+                    }
+                );
+
+            parseOCR(
+                result.data.text
             );
-
-
-          const data =
-            await runOCR(
-              image,
-              mode
-            );
-
-
-          const rows =
-            detectRows(
-              data,
-              image.width,
-              image.height
-            );
-
-
-          imageResults.push(
-            ...rows
-          );
-
 
         }catch(error){
 
-          console.error(error);
+            console.error(error);
 
         }
 
-
         completed++;
 
-        progressBar.style.width =
-          Math.round(
-            completed/total*100
-          )+"%";
-
-      }
-
-
-      entries.push(
-        ...combinePasses(
-          imageResults
-        )
-      );
-
+        progress.style.width =
+            (
+                completed /
+                input.files.length *
+                100
+            ) + "%";
     }
 
+    status.textContent =
+        `Finished. ${ocrRows.length} rows detected.`;
 
-    entries =
-      globalMerge(entries);
-
-
-    renderDetected();
-
-
-    document.getElementById("calculateBtn")
-      .disabled =
-        entries.length===0;
-
-
-    setStatus(
-      `Finished. ${entries.length} scoreboard rows detected.`
-    );
-
-
-  }catch(error){
-
-    console.error(error);
-
-    setStatus(
-      "Scanning failed. Check the console."
-    );
-
-  }
-
-
-  document.getElementById("scanBtn")
-    .disabled=false;
-
-  updateStats();
-
+    renderOCR();
 }
 
 
-/* =========================================================
-   CONFIDENCE
-========================================================= */
+function parseOCR(text){
 
-function confidenceClass(value){
+    const lines =
+        text
+        .split(/\r?\n/)
+        .map(
+            line=>line.trim()
+        )
+        .filter(Boolean);
 
-  if(value>=.9){
-    return "high";
-  }
+    lines.forEach(line=>{
 
-  if(value>=.8){
-    return "medium";
-  }
+        /*
+            Looks for a number at the end
+            of the OCR line.
+        */
 
-  return "low";
+        const match =
+            line.match(
+                /^(.+?)\s+(\d{1,4})$/
+            );
 
+        if(!match)
+            return;
+
+        let team =
+            match[1]
+            .replace(
+                /^\d+\s+/,
+                ""
+            )
+            .trim();
+
+        const score =
+            Number(match[2]);
+
+        if(
+            !team ||
+            score < 0 ||
+            score > 9999
+        )
+            return;
+
+        if(
+            /^(rank|team|score|kills|points)$/i
+                .test(team)
+        )
+            return;
+
+        const duplicate =
+            ocrRows.some(
+                row=>
+                    normalizeTeam(row.team) ===
+                    normalizeTeam(team) &&
+                    row.score === score
+            );
+
+        if(!duplicate){
+
+            ocrRows.push({
+                team,
+                score
+            });
+        }
+    });
 }
 
 
-function confidenceText(value){
+function renderOCR(){
 
-  if(value>=.9){
-    return "HIGH";
-  }
+    const container =
+        document.getElementById(
+            "ocrResults"
+        );
 
-  if(value>=.8){
-    return "MEDIUM";
-  }
+    if(!ocrRows.length){
 
-  return "CHECK";
+        container.innerHTML =
+            `<div class="empty">
+                No detected results.
+            </div>`;
 
-}
-
-
-/* =========================================================
-   RENDER DETECTED
-========================================================= */
-
-function renderDetected(){
-
-  const container =
-    document.getElementById("detected");
-
-  container.innerHTML="";
-
-
-  if(!entries.length){
+        return;
+    }
 
     container.innerHTML =
-      `<div class="empty">
-        No valid scoreboard rows detected.
-      </div>`;
+        ocrRows.map(
+            (row,index)=>`
 
-    return;
+            <div class="ocr-row">
 
-  }
+                <input
+                    value="${escapeHTML(row.team)}"
+                    onchange="
+                        ocrRows[${index}].team=this.value
+                    "
+                >
 
+                <input
+                    type="number"
+                    value="${row.score}"
+                    onchange="
+                        ocrRows[${index}].score=
+                        Number(this.value)||0
+                    "
+                >
 
-  entries.forEach(
-    (entry,index)=>{
+                <button
+                    class="btn danger small"
+                    onclick="
+                        ocrRows.splice(${index},1);
+                        renderOCR();
+                    "
+                >
+                    ×
+                </button>
 
-      const row =
-        document.createElement("div");
+            </div>
 
-      row.className="scoreRow";
-
-
-      const rank =
-        document.createElement("div");
-
-      rank.className="rank";
-
-      rank.textContent =
-        entry.rank!==null
-          ? "#"+entry.rank
-          : "#"+(index+1);
-
-
-      const team =
-        document.createElement("input");
-
-      team.value =
-        entry.team;
-
-
-      team.oninput=()=>{
-
-        entries[index].team =
-          normalizeTeam(
-            team.value
-          );
-
-        updateStats();
-
-      };
-
-
-      const score =
-        document.createElement("input");
-
-      score.type="number";
-
-      score.value =
-        entry.score;
-
-
-      score.oninput=()=>{
-
-        entries[index].score =
-          normalizeScore(
-            score.value
-          ) || 0;
-
-        updateStats();
-
-      };
-
-
-      const del =
-        document.createElement("button");
-
-      del.className="delete";
-
-      del.textContent="×";
-
-      del.onclick=()=>{
-
-        entries.splice(
-          index,
-          1
-        );
-
-        renderDetected();
-        updateStats();
-
-      };
-
-
-      const meta =
-        document.createElement("div");
-
-      meta.className =
-        "meta "+
-        confidenceClass(
-          entry.confidence
-        );
-
-      meta.textContent =
-        confidenceText(
-          entry.confidence
-        )+
-        " CONFIDENCE • OCR VOTES: "+
-        (entry.votes||1);
-
-
-      row.appendChild(rank);
-      row.appendChild(team);
-      row.appendChild(score);
-      row.appendChild(del);
-      row.appendChild(meta);
-
-      container.appendChild(row);
-
-    }
-  );
-
+        `
+        ).join("");
 }
 
 
-/* =========================================================
-   MANUAL TEAM
-========================================================= */
+function clearOCR(){
 
-function addManualRow(){
+    ocrRows=[];
 
-  entries.push({
-    rank:null,
-    team:"NEW TEAM",
-    score:0,
-    confidence:1,
-    votes:1,
-    manual:true
-  });
+    renderOCR();
 
-  renderDetected();
-  updateStats();
+    document
+        .getElementById(
+            "ocrProgress"
+        )
+        .style.width="0%";
 
+    document
+        .getElementById(
+            "ocrStatus"
+        )
+        .textContent="Ready.";
 }
 
 
-/* =========================================================
-   FINAL CALCULATION
-========================================================= */
+function createMatchFromOCR(){
 
-function calculateFinal(){
+    if(!ocrRows.length){
 
-  const totals={};
-  const seen=new Set();
-  const canonical=[];
+        alert(
+            "No OCR results to import."
+        );
 
-
-  entries.forEach(entry=>{
-
-    let team =
-      normalizeTeam(
-        entry.team
-      );
-
-    const score =
-      normalizeScore(
-        entry.score
-      );
-
-
-    if(
-      !team ||
-      score===null
-    ){
-      return;
+        return;
     }
 
+    const name =
+        prompt(
+            "Match name:",
+            `Match ${
+                state.matches.length+1
+            }`
+        );
 
-    let finalTeam=null;
+    if(!name)
+        return;
 
+    const match={
+        id:crypto.randomUUID(),
+        name:name.trim(),
+        results:[]
+    };
 
-    for(
-      const known of canonical
-    ){
+    ocrRows.forEach(row=>{
 
-      if(
-        teamSimilarity(
-          team,
-          known
-        )>=.82
-      ){
+        match.results.push({
 
-        finalTeam=known;
-        break;
+            id:crypto.randomUUID(),
 
-      }
+            teamName:row.team,
 
-    }
+            placement:0,
 
+            kills:0,
 
-    if(!finalTeam){
+            bonus:0,
 
-      finalTeam=team;
-      canonical.push(team);
+            total:Number(row.score)||0,
 
-    }
+            source:"OCR"
 
+        });
+    });
 
-    /*
-      Same team + same score
-      is counted only once.
-    */
+    state.matches.push(match);
 
-    const key =
-      finalTeam+"|"+score;
+    saveState();
 
-
-    if(seen.has(key)){
-      return;
-    }
-
-
-    seen.add(key);
-
-
-    if(
-      totals[finalTeam]===undefined
-    ){
-      totals[finalTeam]=0;
-    }
-
-
-    totals[finalTeam]+=score;
-
-  });
-
-
-  finalResults =
-    Object.entries(
-      totals
-    )
-    .sort(
-      (a,b)=>b[1]-a[1]
+    alert(
+        `${ocrRows.length} OCR results added.`
     );
 
+    clearOCR();
 
-  renderLeaderboard();
-  updateStats();
-  saveResults();
-
+    showPage("matches");
 }
 
 
-/* =========================================================
-   LEADERBOARD
-========================================================= */
+/* -------------------------
+   SETTINGS
+------------------------- */
+
+function saveSettings(){
+
+    state.tournament.name =
+        document
+        .getElementById(
+            "tournamentName"
+        )
+        .value.trim() ||
+        "AbsoluteScore Tournament";
+
+    state.tournament.date =
+        document
+        .getElementById(
+            "tournamentDate"
+        )
+        .value;
+
+    state.settings.killPoints =
+        Number(
+            document
+            .getElementById(
+                "killPoints"
+            ).value
+        ) || 0;
+
+    state.settings.top1 =
+        Number(
+            document
+            .getElementById(
+                "top1"
+            ).value
+        ) || 0;
+
+    state.settings.top2 =
+        Number(
+            document
+            .getElementById(
+                "top2"
+            ).value
+        ) || 0;
+
+    state.settings.top3 =
+        Number(
+            document
+            .getElementById(
+                "top3"
+            ).value
+        ) || 0;
+
+    saveState();
+
+    alert("Settings saved.");
+}
+
+
+/* -------------------------
+   EXPORT / IMPORT
+------------------------- */
+
+function exportData(){
+
+    const blob =
+        new Blob(
+            [
+                JSON.stringify(
+                    state,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:
+                    "application/json"
+            }
+        );
+
+    const url =
+        URL.createObjectURL(
+            blob
+        );
+
+    const a =
+        document.createElement(
+            "a"
+        );
+
+    a.href=url;
+
+    a.download =
+        "AbsoluteScore-backup.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+
+function importData(event){
+
+    const file =
+        event.target.files[0];
+
+    if(!file)
+        return;
+
+    const reader =
+        new FileReader();
+
+    reader.onload=()=>{
+
+        try{
+
+            const imported =
+                JSON.parse(
+                    reader.result
+                );
+
+            if(
+                !imported ||
+                !imported.matches
+            ){
+
+                throw new Error(
+                    "Invalid backup"
+                );
+            }
+
+            state=imported;
+
+            saveState();
+
+            alert(
+                "Backup imported successfully."
+            );
+
+        }catch{
+
+            alert(
+                "Invalid AbsoluteScore backup."
+            );
+        }
+    };
+
+    reader.readAsText(file);
+}
+
+
+/* -------------------------
+   RENDER TEAMS
+------------------------- */
+
+function renderTeams(){
+
+    const container =
+        document.getElementById(
+            "teamsList"
+        );
+
+    if(!state.teams.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No teams added yet.
+            </div>`;
+
+        return;
+    }
+
+    container.innerHTML =
+        state.teams.map(
+            (team,index)=>`
+
+            <div
+                class="match row"
+            >
+
+                <div>
+                    <span class="badge">
+                        #${index+1}
+                    </span>
+
+                    <strong style="margin-left:8px">
+                        ${escapeHTML(team.name)}
+                    </strong>
+                </div>
+
+                <div class="actions">
+
+                    <button
+                        class="btn small"
+                        onclick="
+                            editTeam('${team.id}')
+                        "
+                    >
+                        Edit
+                    </button>
+
+                    <button
+                        class="btn danger small"
+                        onclick="
+                            deleteTeam('${team.id}')
+                        "
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
+
+        `
+        ).join("");
+}
+
+
+/* -------------------------
+   RENDER MATCHES
+------------------------- */
+
+function renderMatches(){
+
+    const container =
+        document.getElementById(
+            "matchesList"
+        );
+
+    if(!state.matches.length){
+
+        container.innerHTML =
+            `<div class="card empty">
+                No matches created yet.
+            </div>`;
+
+        return;
+    }
+
+    container.innerHTML =
+        state.matches.map(
+            (match,index)=>`
+
+            <div class="card">
+
+                <div class="row">
+
+                    <div>
+                        <h3>
+                            ${escapeHTML(match.name)}
+                        </h3>
+
+                        <span class="badge">
+                            ${
+                                match.results.length
+                            } results
+                        </span>
+                    </div>
+
+                    <div class="actions">
+
+                        <button
+                            class="btn small"
+                            onclick="
+                                addMatchResult(
+                                    '${match.id}'
+                                )
+                            "
+                        >
+                            + Result
+                        </button>
+
+                        <button
+                            class="btn danger small"
+                            onclick="
+                                deleteMatch(
+                                    '${match.id}'
+                                )
+                            "
+                        >
+                            Delete
+                        </button>
+
+                    </div>
+
+                </div>
+
+                ${
+                    match.results.length
+                    ?
+                    match.results.map(
+                        result=>`
+
+                        <div class="match-result">
+
+                            <div>
+                                <strong>
+                                    ${escapeHTML(
+                                        result.teamName
+                                    )}
+                                </strong>
+
+                                <div class="muted">
+                                    ${
+                                        result.source==="OCR"
+                                        ? "OCR • "
+                                        : ""
+                                    }
+                                    ${
+                                        result.kills || 0
+                                    } kills
+                                </div>
+                            </div>
+
+                            <div class="row">
+
+                                <strong>
+                                    ${result.total} pts
+                                </strong>
+
+                                <button
+                                    class="btn danger small"
+                                    onclick="
+                                        deleteResult(
+                                            '${match.id}',
+                                            '${result.id}'
+                                        )
+                                    "
+                                >
+                                    ×
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    `
+                    ).join("")
+                    :
+                    `<div class="empty">
+                        No results in this match.
+                    </div>`
+                }
+
+            </div>
+
+        `
+        ).join("");
+}
+
+
+/* -------------------------
+   RENDER LEADERBOARD
+------------------------- */
 
 function renderLeaderboard(){
 
-  const container =
-    document.getElementById(
-      "leaderboard"
+    const body =
+        document.getElementById(
+            "leaderboardBody"
+        );
+
+    const search =
+        (
+            document
+            .getElementById(
+                "leaderboardSearch"
+            )?.value || ""
+        )
+        .toLowerCase();
+
+    const leaderboard =
+        getLeaderboard()
+        .filter(
+            item =>
+                item.team
+                .toLowerCase()
+                .includes(search)
+        );
+
+    if(!leaderboard.length){
+
+        body.innerHTML =
+            `<tr>
+                <td colspan="5">
+                    <div class="empty">
+                        No results found.
+                    </div>
+                </td>
+            </tr>`;
+
+        return;
+    }
+
+    body.innerHTML =
+        leaderboard.map(
+            item=>`
+
+            <tr>
+
+                <td class="rank">
+                    ${
+                        item.rank===1
+                            ? "🥇"
+                            : item.rank===2
+                                ? "🥈"
+                                : item.rank===3
+                                    ? "🥉"
+                                    : item.rank
+                    }
+                </td>
+
+                <td class="team">
+                    ${escapeHTML(item.team)}
+                </td>
+
+                <td>
+                    ${item.matches}
+                </td>
+
+                <td>
+                    ${item.kills}
+                </td>
+
+                <td class="points">
+                    ${item.points}
+                </td>
+
+            </tr>
+
+        `
+        ).join("");
+}
+
+
+/* -------------------------
+   COPY LEADERBOARD
+------------------------- */
+
+function copyLeaderboard(){
+
+    const leaderboard =
+        getLeaderboard();
+
+    let text =
+        `${state.tournament.name}\n` +
+        `${state.tournament.date}\n\n`;
+
+    leaderboard.forEach(
+        item=>{
+
+            text +=
+                `${item.rank}. ` +
+                `${item.team} — ` +
+                `${item.points} pts\n`;
+        }
     );
 
-  container.innerHTML="";
+    navigator.clipboard
+        .writeText(text)
+        .then(
+            ()=>alert(
+                "Leaderboard copied."
+            )
+        );
+}
 
 
-  if(!finalResults.length){
+/* -------------------------
+   QUICK BOARD
+------------------------- */
+
+function renderQuickBoard(){
+
+    const container =
+        document.getElementById(
+            "quickBoard"
+        );
+
+    const board =
+        getLeaderboard()
+        .slice(0,5);
+
+    if(!board.length){
+
+        container.innerHTML =
+            `<div class="empty">
+                No scores yet.
+            </div>`;
+
+        return;
+    }
 
     container.innerHTML =
-      `<div class="empty">
-        No scores available.
-      </div>`;
+        board.map(
+            item=>`
 
-    return;
+            <div class="match-result">
 
-  }
+                <div>
+                    <span class="badge">
+                        #${item.rank}
+                    </span>
 
+                    <strong style="margin-left:8px">
+                        ${escapeHTML(item.team)}
+                    </strong>
+                </div>
 
-  finalResults.forEach(
-    (item,index)=>{
+                <strong>
+                    ${item.points} pts
+                </strong>
 
-      const row =
-        document.createElement("div");
+            </div>
 
-      row.className="leader";
-
-
-      const rank =
-        document.createElement("div");
-
-      rank.className="leaderRank";
-
-      rank.textContent =
-        "#"+(index+1);
-
-
-      const team =
-        document.createElement("div");
-
-      team.className="teamName";
-
-      team.textContent =
-        item[0];
-
-
-      const score =
-        document.createElement("div");
-
-      score.className="teamScore";
-
-      score.textContent =
-        item[1]+" pts";
-
-
-      row.appendChild(rank);
-      row.appendChild(team);
-      row.appendChild(score);
-
-      container.appendChild(row);
-
-    }
-  );
-
-
-  updateOutputText();
-
+        `
+        ).join("");
 }
 
 
-/* =========================================================
-   OUTPUT TEXT
-========================================================= */
+/* -------------------------
+   DASHBOARD
+------------------------- */
 
-function updateOutputText(){
+function renderDashboard(){
 
-  let text =
-    "ABSOLUTESCORE LEADERBOARD\n";
+    const board =
+        getLeaderboard();
 
-  text +=
-    "========================\n\n";
+    document
+        .getElementById(
+            "dashName"
+        )
+        .textContent =
+        state.tournament.name;
 
+    document
+        .getElementById(
+            "dashDate"
+        )
+        .textContent =
+        state.tournament.date;
 
-  finalResults.forEach(
-    (item,index)=>{
+    document
+        .getElementById(
+            "statTeams"
+        )
+        .textContent =
+        state.teams.length;
 
-      text +=
-        `${index+1}. ${item[0]} — ${item[1]} pts\n`;
+    document
+        .getElementById(
+            "statMatches"
+        )
+        .textContent =
+        state.matches.length;
 
-    }
-  );
+    document
+        .getElementById(
+            "statResults"
+        )
+        .textContent =
+        state.matches.reduce(
+            (n,m)=>
+                n +
+                m.results.length,
+            0
+        );
 
+    document
+        .getElementById(
+            "statPoints"
+        )
+        .textContent =
+        board.reduce(
+            (n,t)=>
+                n +
+                t.points,
+            0
+        );
 
-  document.getElementById(
-    "outputText"
-  ).value=text;
-
+    renderQuickBoard();
 }
 
 
-/* =========================================================
-   COPY
-========================================================= */
+/* -------------------------
+   SETTINGS UI
+------------------------- */
 
-async function copyLeaderboard(){
+function renderSettings(){
 
-  if(!finalResults.length){
+    document
+        .getElementById(
+            "tournamentName"
+        )
+        .value =
+        state.tournament.name;
 
-    alert(
-      "Calculate the leaderboard first."
-    );
+    document
+        .getElementById(
+            "tournamentDate"
+        )
+        .value =
+        state.tournament.date;
 
-    return;
+    document
+        .getElementById(
+            "killPoints"
+        )
+        .value =
+        state.settings.killPoints;
 
-  }
+    document
+        .getElementById(
+            "top1"
+        )
+        .value =
+        state.settings.top1;
 
+    document
+        .getElementById(
+            "top2"
+        )
+        .value =
+        state.settings.top2;
 
-  updateOutputText();
-
-
-  try{
-
-    await navigator.clipboard.writeText(
-      document.getElementById(
-        "outputText"
-      ).value
-    );
-
-
-    setStatus(
-      "Leaderboard copied to clipboard."
-    );
-
-  }catch(error){
-
-    const box =
-      document.getElementById(
-        "outputText"
-      );
-
-    box.select();
-
-    document.execCommand("copy");
-
-    setStatus(
-      "Leaderboard copied."
-    );
-
-  }
-
+    document
+        .getElementById(
+            "top3"
+        )
+        .value =
+        state.settings.top3;
 }
 
 
-/* =========================================================
-   DOWNLOAD
-========================================================= */
+/* -------------------------
+   RENDER EVERYTHING
+------------------------- */
 
-function downloadLeaderboard(){
+function renderAll(){
 
-  if(!finalResults.length){
+    renderDashboard();
 
-    alert(
-      "Calculate the leaderboard first."
-    );
+    renderTeams();
 
-    return;
+    renderMatches();
 
-  }
+    renderLeaderboard();
 
-
-  updateOutputText();
-
-
-  const blob =
-    new Blob(
-      [
-        document.getElementById(
-          "outputText"
-        ).value
-      ],
-      {
-        type:"text/plain"
-      }
-    );
-
-
-  const url =
-    URL.createObjectURL(blob);
-
-
-  const a =
-    document.createElement("a");
-
-  a.href=url;
-  a.download=
-    "AbsoluteScore-Leaderboard.txt";
-
-  a.click();
-
-
-  URL.revokeObjectURL(url);
-
+    renderSettings();
 }
 
 
-/* =========================================================
-   LOCAL SAVE
-========================================================= */
+/* -------------------------
+   RESET
+------------------------- */
 
-function saveResults(){
-
-  try{
-
-    localStorage.setItem(
-      "AbsoluteScoreV10",
-      JSON.stringify({
-        entries,
-        finalResults
-      })
-    );
-
-  }catch(error){
-
-    console.log(
-      "Local save unavailable."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   LOAD RESULTS
-========================================================= */
-
-function loadResults(){
-
-  try{
-
-    const saved =
-      localStorage.getItem(
-        "AbsoluteScoreV10"
-      );
-
-
-    if(!saved){
-      return;
-    }
-
-
-    const data =
-      JSON.parse(saved);
-
+function resetTournament(){
 
     if(
-      Array.isArray(data.entries)
-    ){
-
-      entries =
-        data.entries;
-
-    }
-
-
-    if(
-      Array.isArray(data.finalResults)
-    ){
-
-      finalResults =
-        data.finalResults;
-
-    }
-
-
-    if(entries.length){
-
-      renderDetected();
-
-    }
-
-
-    if(finalResults.length){
-
-      renderLeaderboard();
-
-    }
-
-
-    updateStats();
-
-  }catch(error){
-
-    console.log(
-      "No saved results."
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   STATS
-========================================================= */
-
-function updateStats(){
-
-  document.getElementById(
-    "rowCount"
-  ).textContent =
-    entries.length;
-
-
-  const teams =
-    new Set(
-      entries.map(
-        e=>normalizeTeam(e.team)
-      )
-    );
-
-
-  document.getElementById(
-    "teamCount"
-  ).textContent =
-    teams.size;
-
-
-  const points =
-    entries.reduce(
-      (sum,e)=>
-        sum+
-        (normalizeScore(e.score)||0),
-      0
-    );
-
-
-  document.getElementById(
-    "totalPoints"
-  ).textContent =
-    points;
-
-}
-
-
-/* =========================================================
-   CLEAR EVERYTHING
-========================================================= */
-
-function clearEverything(){
-
-  if(
-    !confirm(
-      "Clear all AbsoluteScore data?"
+        !confirm(
+            "This will erase the current tournament. Continue?"
+        )
     )
-  ){
-    return;
-  }
+        return;
 
+    state =
+        defaultState();
 
-  entries=[];
-  finalResults=[];
+    localStorage.removeItem(
+        STORAGE_KEY
+    );
 
-
-  localStorage.removeItem(
-    "AbsoluteScoreV10"
-  );
-
-
-  fileInput.value="";
-
-
-  document.getElementById(
-    "previews"
-  ).innerHTML =
-    `<div class="empty">
-      No screenshots selected.
-    </div>`;
-
-
-  document.getElementById(
-    "detected"
-  ).innerHTML =
-    `<div class="empty">
-      No results yet.
-    </div>`;
-
-
-  document.getElementById(
-    "leaderboard"
-  ).innerHTML =
-    `<div class="empty">
-      No leaderboard yet.
-    </div>`;
-
-
-  document.getElementById(
-    "outputText"
-  ).value="";
-
-
-  document.getElementById(
-    "calculateBtn"
-  ).disabled=true;
-
-
-  progressBar.style.width="0%";
-
-
-  updateStats();
-
-
-  setStatus("Ready.");
-
+    renderAll();
 }
 
 
-/* =========================================================
+/* -------------------------
    HTML ESCAPE
-========================================================= */
+------------------------- */
 
-function escapeHTML(text){
+function escapeHTML(value){
 
-  return String(text)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
-
+    return String(value ?? "")
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
-/* =========================================================
-   STARTUP
-========================================================= */
+/* -------------------------
+   START
+------------------------- */
 
-loadResults();
-updateStats();
+renderAll();
 
 </script>
 
