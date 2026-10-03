@@ -6,6 +6,8 @@
 
   <title>AbsoluteScore</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
   <style>
     * {
       box-sizing: border-box;
@@ -14,43 +16,48 @@
     body {
       margin: 0;
       min-height: 100vh;
+      background: #08080d;
+      color: #fff;
       font-family: Arial, sans-serif;
-      background: #0b0b12;
-      color: white;
     }
 
     .app {
+      width: 100%;
       max-width: 900px;
       margin: auto;
-      padding: 25px 15px;
+      padding: 20px;
     }
 
-    .title {
+    .header {
       text-align: center;
-      font-size: 38px;
+      padding: 25px 0;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 40px;
       font-weight: 900;
-      margin-bottom: 5px;
+      letter-spacing: 2px;
     }
 
-    .subtitle {
-      text-align: center;
-      color: #aaa;
-      margin-bottom: 25px;
+    .header p {
+      color: #999;
+      margin-top: 8px;
     }
 
     .card {
-      background: #15151f;
-      border: 1px solid #292938;
+      background: #12121a;
+      border: 1px solid #282833;
       border-radius: 18px;
       padding: 20px;
       margin-bottom: 20px;
     }
 
     .upload {
-      width: 100%;
-      padding: 18px;
+      display: block;
       border: 2px dashed #555;
-      border-radius: 14px;
+      border-radius: 15px;
+      padding: 35px 15px;
       text-align: center;
       cursor: pointer;
       color: #ccc;
@@ -58,6 +65,7 @@
 
     .upload:hover {
       border-color: #8b5cf6;
+      color: #fff;
     }
 
     #imageInput {
@@ -66,10 +74,10 @@
 
     button {
       width: 100%;
-      border: none;
-      border-radius: 12px;
-      padding: 15px;
       margin-top: 15px;
+      padding: 16px;
+      border: 0;
+      border-radius: 12px;
       background: #7c3aed;
       color: white;
       font-size: 16px;
@@ -77,44 +85,80 @@
       cursor: pointer;
     }
 
-    button:active {
-      transform: scale(0.98);
+    button:hover {
+      background: #8b5cf6;
     }
 
-    .image-list {
+    button:disabled {
+      background: #333;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    .status {
       margin-top: 15px;
+      text-align: center;
       color: #aaa;
       font-size: 14px;
     }
 
-    .leaderboard {
-      margin-top: 15px;
+    .leaderboard-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .leaderboard-title h2 {
+      margin: 0;
     }
 
     .team {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #1d1d29;
-      padding: 14px;
-      border-radius: 10px;
-      margin-bottom: 8px;
+      background: #1b1b26;
+      border: 1px solid #292936;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 9px;
+    }
+
+    .team-name {
+      font-weight: bold;
+      word-break: break-word;
     }
 
     .rank {
-      font-weight: bold;
-      margin-right: 10px;
+      display: inline-block;
+      width: 35px;
+      color: #999;
     }
 
     .score {
-      font-weight: bold;
-      font-size: 18px;
+      font-size: 19px;
+      font-weight: 900;
     }
 
     .empty {
       text-align: center;
-      color: #777;
-      padding: 25px;
+      padding: 35px 10px;
+      color: #666;
+    }
+
+    .progress {
+      width: 100%;
+      height: 7px;
+      background: #292933;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #8b5cf6;
+      transition: width 0.2s;
     }
   </style>
 </head>
@@ -123,18 +167,18 @@
 
 <div class="app">
 
-  <div class="title">
-    ABSOLUTESCORE
-  </div>
-
-  <div class="subtitle">
-    Automatic scoreboard calculator
+  <div class="header">
+    <h1>ABSOLUTESCORE</h1>
+    <p>Automatic scoreboard calculator</p>
   </div>
 
   <div class="card">
 
     <label class="upload" for="imageInput">
-      📸 Tap here to upload scoreboard pictures
+      📸<br><br>
+      <strong>UPLOAD SCOREBOARD PICTURES</strong>
+      <br>
+      <small>Select one or multiple images</small>
     </label>
 
     <input
@@ -144,11 +188,15 @@
       multiple
     >
 
-    <div id="imageList" class="image-list">
+    <div id="imageStatus" class="status">
       No images selected.
     </div>
 
-    <button onclick="calculateScores()">
+    <div class="progress">
+      <div id="progressBar" class="progress-bar"></div>
+    </div>
+
+    <button id="calculateButton" onclick="calculateScores()">
       🧮 CALCULATE ABSOLUTE SCORES
     </button>
 
@@ -156,11 +204,13 @@
 
   <div class="card">
 
-    <h2>🏆 FINAL LEADERBOARD</h2>
+    <div class="leaderboard-title">
+      <h2>🏆 FINAL LEADERBOARD</h2>
+    </div>
 
-    <div id="leaderboard" class="leaderboard">
+    <div id="leaderboard">
       <div class="empty">
-        Upload scoreboard pictures first.
+        Upload scoreboard pictures to begin.
       </div>
     </div>
 
@@ -170,92 +220,413 @@
 
 <script>
 
-const imageInput = document.getElementById("imageInput");
-const imageList = document.getElementById("imageList");
-const leaderboard = document.getElementById("leaderboard");
+const imageInput =
+  document.getElementById("imageInput");
 
-imageInput.addEventListener("change", function () {
+const imageStatus =
+  document.getElementById("imageStatus");
 
-  if (this.files.length === 0) {
-    imageList.textContent = "No images selected.";
+const leaderboard =
+  document.getElementById("leaderboard");
+
+const progressBar =
+  document.getElementById("progressBar");
+
+const calculateButton =
+  document.getElementById("calculateButton");
+
+
+/*
+  SHOW SELECTED IMAGES
+*/
+
+imageInput.addEventListener("change", () => {
+
+  const count =
+    imageInput.files.length;
+
+  if (count === 0) {
+
+    imageStatus.textContent =
+      "No images selected.";
+
     return;
   }
 
-  imageList.textContent =
-    `${this.files.length} image(s) selected.`;
+  imageStatus.textContent =
+    `${count} scoreboard image(s) selected.`;
 
 });
 
 
-function calculateScores() {
+/*
+  OCR
+*/
 
-  /*
-    Temporary test data.
+async function readImage(file, imageNumber, totalImages) {
 
-    OCR will be connected in the next step.
-  */
+  const result =
+    await Tesseract.recognize(
+      file,
+      "eng",
+      {
+        logger: message => {
 
-  const entries = [
-    { team: "NXS MPZ", score: 120 },
-    { team: "NXS MPZ", score: 120 },
-    { team: "NXS MPZ", score: 90 },
-    { team: "AERI", score: 135 },
-    { team: "AERI", score: 135 },
-    { team: "DB", score: 50 }
-  ];
+          if (
+            message.status ===
+            "recognizing text"
+          ) {
 
-  const seen = new Set();
-  const totals = {};
+            const percent =
+              Math.round(
+                message.progress * 100
+              );
 
-  for (const entry of entries) {
+            const overall =
+              Math.round(
+                (
+                  ((imageNumber - 1) * 100)
+                  + percent
+                ) / totalImages
+              );
 
-    const team = entry.team.trim();
-    const score = Number(entry.score);
+            progressBar.style.width =
+              overall + "%";
 
-    const key =
-      team.toUpperCase() + "|" + score;
+            imageStatus.textContent =
+              `Reading image ${imageNumber}/${totalImages} — ${percent}%`;
 
-    // Ignore the exact same team + score
-    if (seen.has(key)) {
+          }
+
+        }
+      }
+    );
+
+  return result.data.text;
+}
+
+
+/*
+  CLEAN TEAM NAME
+*/
+
+function cleanTeamName(name) {
+
+  return name
+    .replace(/[|]/g, "")
+    .replace(/[^\w\sÀ-ÿØøÆæƎƵƵƵ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+}
+
+
+/*
+  EXTRACT TEAM + SCORE
+*/
+
+function extractScores(text) {
+
+  const entries = [];
+
+  const lines =
+    text.split(/\r?\n/);
+
+  for (let line of lines) {
+
+    line = line.trim();
+
+    if (!line) {
       continue;
     }
 
-    seen.add(key);
+    /*
+      Accept:
 
-    if (!totals[team]) {
-      totals[team] = 0;
+      TEAM 120
+      TEAM - 120
+      TEAM : 120
+    */
+
+    const match =
+      line.match(
+        /^(.+?)\s*(?:-|:)?\s*(\d{1,5})\s*$/
+      );
+
+    if (!match) {
+      continue;
     }
 
-    totals[team] += score;
+    const team =
+      cleanTeamName(match[1]);
+
+    const score =
+      Number(match[2]);
+
+    if (
+      !team ||
+      Number.isNaN(score)
+    ) {
+      continue;
+    }
+
+    /*
+      Prevent obvious OCR garbage.
+    */
+
+    if (score < 0 || score > 99999) {
+      continue;
+    }
+
+    entries.push({
+      team,
+      score
+    });
+
   }
 
-  const results = Object.entries(totals)
-    .sort((a, b) => b[1] - a[1]);
+  return entries;
+
+}
+
+
+/*
+  NORMALIZE TEAM NAME
+*/
+
+function normalizeTeam(team) {
+
+  return team
+    .toUpperCase()
+    .replace(/\s+/g, " ")
+    .trim();
+
+}
+
+
+/*
+  ABSOLUTE SCORE CALCULATOR
+*/
+
+function calculateAbsoluteScores(entries) {
+
+  const seen =
+    new Set();
+
+  const totals =
+    {};
+
+  for (const entry of entries) {
+
+    const team =
+      entry.team.trim();
+
+    const score =
+      Number(entry.score);
+
+    const normalizedTeam =
+      normalizeTeam(team);
+
+    /*
+      IMPORTANT:
+
+      Same TEAM + same SCORE
+      is counted ONLY ONCE.
+
+      Example:
+
+      NXS MPZ — 120
+      NXS MPZ — 120
+
+      Only one 120 is counted.
+    */
+
+    const uniqueKey =
+      normalizedTeam + "|" + score;
+
+    if (seen.has(uniqueKey)) {
+      continue;
+    }
+
+    seen.add(uniqueKey);
+
+    if (!totals[normalizedTeam]) {
+
+      totals[normalizedTeam] = {
+        name: team,
+        score: 0
+      };
+
+    }
+
+    totals[normalizedTeam].score +=
+      score;
+
+  }
+
+  return Object.values(totals)
+    .sort(
+      (a, b) =>
+        b.score - a.score
+    );
+
+}
+
+
+/*
+  DISPLAY LEADERBOARD
+*/
+
+function displayLeaderboard(results) {
 
   leaderboard.innerHTML = "";
 
-  results.forEach((item, index) => {
+  if (results.length === 0) {
 
-    const team = item[0];
-    const score = item[1];
+    leaderboard.innerHTML =
+      `<div class="empty">
+        No readable scores were found.
+      </div>`;
 
-    const row = document.createElement("div");
+    return;
+  }
 
-    row.className = "team";
+  results.forEach(
+    (team, index) => {
 
-    row.innerHTML = `
-      <div>
-        <span class="rank">${index + 1}.</span>
-        ${team}
-      </div>
+      const row =
+        document.createElement("div");
 
-      <div class="score">
-        ${score}
-      </div>
-    `;
+      row.className =
+        "team";
 
-    leaderboard.appendChild(row);
-  });
+      row.innerHTML = `
+        <div class="team-name">
+          <span class="rank">
+            ${index + 1}.
+          </span>
+
+          ${escapeHTML(team.name)}
+        </div>
+
+        <div class="score">
+          ${team.score}
+        </div>
+      `;
+
+      leaderboard.appendChild(row);
+
+    }
+  );
+
+}
+
+
+/*
+  PROTECT HTML OUTPUT
+*/
+
+function escapeHTML(text) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    text;
+
+  return div.innerHTML;
+
+}
+
+
+/*
+  MAIN CALCULATOR
+*/
+
+async function calculateScores() {
+
+  const files =
+    Array.from(imageInput.files);
+
+  if (files.length === 0) {
+
+    alert(
+      "Please upload scoreboard pictures first."
+    );
+
+    return;
+  }
+
+  calculateButton.disabled =
+    true;
+
+  leaderboard.innerHTML =
+    `<div class="empty">
+      🔎 Starting OCR...
+    </div>`;
+
+  progressBar.style.width =
+    "0%";
+
+  let allEntries = [];
+
+  try {
+
+    for (
+      let i = 0;
+      i < files.length;
+      i++
+    ) {
+
+      const text =
+        await readImage(
+          files[i],
+          i + 1,
+          files.length
+        );
+
+      console.log(
+        "OCR TEXT:",
+        text
+      );
+
+      const entries =
+        extractScores(text);
+
+      allEntries =
+        allEntries.concat(entries);
+
+    }
+
+    progressBar.style.width =
+      "100%";
+
+    imageStatus.textContent =
+      "Calculation complete.";
+
+    const results =
+      calculateAbsoluteScores(
+        allEntries
+      );
+
+    displayLeaderboard(results);
+
+  } catch (error) {
+
+    console.error(error);
+
+    leaderboard.innerHTML =
+      `<div class="empty">
+        ❌ Something went wrong while reading the images.
+      </div>`;
+
+    imageStatus.textContent =
+      "OCR error. Check the browser console.";
+
+  }
+
+  calculateButton.disabled =
+    false;
 
 }
 
