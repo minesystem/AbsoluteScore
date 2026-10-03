@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>AbsoluteScore</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #0b0b12;
+      color: white;
+    }
+
+    .app {
+      max-width: 900px;
+      margin: auto;
+      padding: 25px 15px;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 38px;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: #15151f;
+      border: 1px solid #292938;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .upload {
+      width: 100%;
+      padding: 18px;
+      border: 2px dashed #555;
+      border-radius: 14px;
+      text-align: center;
+      cursor: pointer;
+      color: #ccc;
+    }
+
+    .upload:hover {
+      border-color: #8b5cf6;
+    }
+
+    #imageInput {
+      display: none;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 15px;
+      background: #7c3aed;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .image-list {
+      margin-top: 15px;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    .leaderboard {
+      margin-top: 15px;
+    }
+
+    .team {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #1d1d29;
+      padding: 14px;
+      border-radius: 10px;
+      margin-bottom: 8px;
+    }
+
+    .rank {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .score {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .empty {
+      text-align: center;
+      color: #777;
+      padding: 25px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="title">
+    ABSOLUTESCORE
+  </div>
+
+  <div class="subtitle">
+    Automatic scoreboard calculator
+  </div>
+
+  <div class="card">
+
+    <label class="upload" for="imageInput">
+      📸 Tap here to upload scoreboard pictures
+    </label>
+
+    <input
+      id="imageInput"
+      type="file"
+      accept="image/*"
+      multiple
+    >
+
+    <div id="imageList" class="image-list">
+      No images selected.
+    </div>
+
+    <button onclick="calculateScores()">
+      🧮 CALCULATE ABSOLUTE SCORES
+    </button>
+
+  </div>
+
+  <div class="card">
+
+    <h2>🏆 FINAL LEADERBOARD</h2>
+
+    <div id="leaderboard" class="leaderboard">
+      <div class="empty">
+        Upload scoreboard pictures first.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+const imageInput = document.getElementById("imageInput");
+const imageList = document.getElementById("imageList");
+const leaderboard = document.getElementById("leaderboard");
+
+imageInput.addEventListener("change", function () {
+
+  if (this.files.length === 0) {
+    imageList.textContent = "No images selected.";
+    return;
+  }
+
+  imageList.textContent =
+    `${this.files.length} image(s) selected.`;
+
+});
+
+
+function calculateScores() {
+
+  /*
+    Temporary test data.
+
+    OCR will be connected in the next step.
+  */
+
+  const entries = [
+    { team: "NXS MPZ", score: 120 },
+    { team: "NXS MPZ", score: 120 },
+    { team: "NXS MPZ", score: 90 },
+    { team: "AERI", score: 135 },
+    { team: "AERI", score: 135 },
+    { team: "DB", score: 50 }
+  ];
+
+  const seen = new Set();
+  const totals = {};
+
+  for (const entry of entries) {
+
+    const team = entry.team.trim();
+    const score = Number(entry.score);
+
+    const key =
+      team.toUpperCase() + "|" + score;
+
+    // Ignore the exact same team + score
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+
+    if (!totals[team]) {
+      totals[team] = 0;
+    }
+
+    totals[team] += score;
+  }
+
+  const results = Object.entries(totals)
+    .sort((a, b) => b[1] - a[1]);
+
+  leaderboard.innerHTML = "";
+
+  results.forEach((item, index) => {
+
+    const team = item[0];
+    const score = item[1];
+
+    const row = document.createElement("div");
+
+    row.className = "team";
+
+    row.innerHTML = `
+      <div>
+        <span class="rank">${index + 1}.</span>
+        ${team}
+      </div>
+
+      <div class="score">
+        ${score}
+      </div>
+    `;
+
+    leaderboard.appendChild(row);
+  });
+
+}
+
+</script>
+
+</body>
+</html>
